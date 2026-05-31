@@ -1,0 +1,6 @@
+# Claude Code / ローカル開発用の設定（コミットしない）
+.claude/
+
+# OS / エディタ
+.DS_Store
+Thumbs.db

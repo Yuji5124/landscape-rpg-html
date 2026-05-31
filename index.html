@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ランダム仲間RPG プロトタイプ</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="game">
+
+    <!-- ============ タイトル画面 ============ -->
+    <section id="screen-title" class="screen active">
+      <div class="title-stars"></div>
+      <div class="title-box">
+        <div class="title-emblem">⚔️</div>
+        <h1 class="game-title">ランダム仲間<span class="title-rpg">RPG</span></h1>
+        <p class="game-subtitle">〜 4人の仲間で20ステージを攻略せよ 〜</p>
+
+        <div class="title-heroes" aria-hidden="true">
+          <span>🛡️</span><span>🏹</span><span>🔮</span><span>⚡</span>
+        </div>
+
+        <div class="title-buttons">
+          <button id="btn-start" class="btn btn-large btn-primary">
+            <span class="btn-ico">▶</span> はじめる
+          </button>
+          <button id="btn-continue" class="btn btn-large">
+            <span class="btn-ico">💾</span> つづきから
+          </button>
+          <button id="btn-reset" class="btn btn-small btn-danger btn-reset">データ削除</button>
+        </div>
+        <p id="title-info" class="hint"></p>
+        <p class="title-version">prototype v1.0</p>
+      </div>
+    </section>
+
+    <!-- ============ ステージ選択画面 ============ -->
+    <section id="screen-stage" class="screen">
+      <header class="stage-header">
+        <h2>ステージ選択</h2>
+        <button id="btn-back-title" class="btn btn-small">タイトルへ</button>
+      </header>
+      <div class="party-power" id="party-power"></div>
+      <div class="party-preview" id="party-preview"></div>
+      <div class="item-bar" id="item-bar"></div>
+      <div class="stage-grid" id="stage-grid"></div>
+    </section>
+
+    <!-- ============ 戦闘画面 ============ -->
+    <section id="screen-battle" class="screen">
+      <div class="battle-layout">
+
+        <!-- 上部：ステージ情報・敵 -->
+        <div class="battle-main">
+          <div class="battle-top">
+            <div class="stage-info" id="battle-stage-info"></div>
+            <div class="enemy-area" id="enemy-area">
+              <div class="enemy-figure" id="enemy-figure">👾</div>
+              <div class="enemy-name" id="enemy-name">エネミー</div>
+              <div class="enemy-tags" id="enemy-tags"></div>
+              <div class="hp-bar enemy-hp">
+                <div class="hp-bar-fill" id="enemy-hp-fill"></div>
+                <span class="hp-bar-text" id="enemy-hp-text"></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 中央：演出エリア -->
+          <div class="battle-stage-fx" id="battle-fx"></div>
+
+          <!-- 下部左：メッセージ / 下部右：コマンド -->
+          <div class="battle-bottom">
+            <div class="message-window" id="message-window"></div>
+            <div class="command-window" id="command-window"></div>
+          </div>
+        </div>
+
+        <!-- 右側：味方ステータス -->
+        <aside class="party-panel" id="party-panel"></aside>
+      </div>
+    </section>
+
+    <!-- ============ ガチャ / 仲間選択画面 ============ -->
+    <section id="screen-gacha" class="screen">
+      <div class="gacha-box">
+        <h2 id="gacha-title">新しい仲間があらわれた！</h2>
+        <div class="gacha-card" id="gacha-card"></div>
+        <div class="gacha-actions" id="gacha-actions"></div>
+        <div class="gacha-section-title">現在のパーティ（総合力を比較）</div>
+        <div class="gacha-party" id="gacha-party"></div>
+      </div>
+    </section>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

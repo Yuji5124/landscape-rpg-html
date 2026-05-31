@@ -1,0 +1,359 @@
+/* ============================================================
+   ランダム仲間RPG プロトタイプ  styles.css
+   ドラクエ風コマンドバトルの簡易UI
+   ============================================================ */
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0a0a18;
+  --panel: #111126;
+  --panel-light: #1c1c3a;
+  --border: #4a4a8a;
+  --text: #f0f0ff;
+  --accent: #ffd24a;
+  --hp-good: #36d36b;
+  --hp-mid: #e8c84a;
+  --hp-low: #e0512f;
+  --rarity: #ffb33a;
+}
+
+body {
+  font-family: "Segoe UI", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+  background: radial-gradient(circle at 50% 0%, #1a1a3a 0%, var(--bg) 70%);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 16px;
+}
+
+#game {
+  width: 100%;
+  max-width: 1100px;
+}
+
+/* ---------- 画面共通 ---------- */
+.screen { display: none; }
+.screen.active { display: block; animation: fade .25s ease; }
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+
+/* ---------- ボタン ---------- */
+.btn {
+  font-family: inherit;
+  background: var(--panel-light);
+  color: var(--text);
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 16px;
+  cursor: pointer;
+  font-size: 15px;
+  transition: transform .08s, background .15s, border-color .15s;
+}
+.btn:hover:not(:disabled) { background: #2a2a55; border-color: var(--accent); }
+.btn:active:not(:disabled) { transform: translateY(2px); }
+.btn:disabled { opacity: .4; cursor: not-allowed; }
+.btn-large { font-size: 20px; padding: 14px 40px; width: 260px; }
+.btn-small { font-size: 13px; padding: 6px 12px; }
+.btn-danger { border-color: #a33; }
+.btn-danger:hover:not(:disabled) { background: #5a1a1a; border-color: #e55; }
+.btn-primary { border-color: var(--accent); background: #2c2c10; }
+
+/* ============ タイトル画面 ============ */
+#screen-title { text-align: center; padding-top: 7vh; position: relative; overflow: hidden; }
+#screen-title.active { min-height: 90vh; }
+
+/* 流れる星空の背景 */
+.title-stars {
+  position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background-image:
+    radial-gradient(1.5px 1.5px at 20% 30%, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 70% 60%, #cfe, transparent),
+    radial-gradient(2px 2px at 40% 80%, #ffd, transparent),
+    radial-gradient(1px 1px at 85% 20%, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 55% 15%, #adf, transparent),
+    radial-gradient(1px 1px at 10% 70%, #fff, transparent),
+    radial-gradient(2px 2px at 90% 85%, #ffd, transparent);
+  background-size: 100% 100%;
+  opacity: .55;
+  animation: twinkle 4s ease-in-out infinite alternate;
+}
+@keyframes twinkle { from { opacity: .3; } to { opacity: .7; } }
+
+.title-box { display: inline-block; position: relative; z-index: 1; }
+
+.title-emblem {
+  font-size: 48px; line-height: 1; margin-bottom: 6px;
+  animation: emblemFloat 3s ease-in-out infinite;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,.6));
+}
+@keyframes emblemFloat { 0%,100%{ transform: translateY(0) rotate(-4deg);} 50%{ transform: translateY(-8px) rotate(4deg);} }
+
+.game-title {
+  font-size: 60px;
+  font-weight: 900;
+  letter-spacing: 4px;
+  background: linear-gradient(180deg, #fff6c8 0%, var(--accent) 45%, #e08a1a 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 24px rgba(255,210,74,.35);
+  filter: drop-shadow(3px 3px 0 #000);
+  animation: titlePulse 2.6s ease-in-out infinite;
+}
+.title-rpg { -webkit-text-fill-color: #fff; color: #fff; }
+@keyframes titlePulse { 0%,100%{ filter: drop-shadow(3px 3px 0 #000) brightness(1);} 50%{ filter: drop-shadow(3px 3px 0 #000) brightness(1.15);} }
+
+.game-subtitle { margin: 14px 0 22px; color: #c4c4ec; font-size: 16px; letter-spacing: 1px; }
+
+/* 仲間アイコンの装飾 */
+.title-heroes { display: flex; gap: 18px; justify-content: center; margin-bottom: 30px; }
+.title-heroes span {
+  font-size: 30px;
+  display: inline-block;
+  filter: drop-shadow(0 3px 5px rgba(0,0,0,.5));
+  animation: heroBob 2.2s ease-in-out infinite;
+}
+.title-heroes span:nth-child(2){ animation-delay: .25s; }
+.title-heroes span:nth-child(3){ animation-delay: .5s; }
+.title-heroes span:nth-child(4){ animation-delay: .75s; }
+@keyframes heroBob { 0%,100%{ transform: translateY(0);} 50%{ transform: translateY(-6px);} }
+
+.title-buttons { display: flex; flex-direction: column; gap: 14px; align-items: center; }
+.btn-ico { font-size: .85em; margin-right: 4px; }
+
+/* はじめる（メイン）ボタンを強調 */
+#btn-start.btn-primary {
+  background: linear-gradient(180deg, #3a3a18, #2a2a0e);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 0 rgba(255,210,74,.5);
+  animation: startGlow 2s ease-in-out infinite;
+}
+@keyframes startGlow {
+  0%,100%{ box-shadow: 0 0 14px rgba(255,210,74,.25); }
+  50%    { box-shadow: 0 0 26px rgba(255,210,74,.55); }
+}
+.btn-reset { width: 160px; margin-top: 8px; opacity: .8; }
+
+.hint { margin-top: 20px; color: #9090c8; font-size: 13px; min-height: 18px; }
+.title-version { margin-top: 30px; color: #5a5a88; font-size: 12px; letter-spacing: 1px; }
+
+/* ============ ステージ選択 ============ */
+.stage-header {
+  display: flex; justify-content: space-between; align-items: center;
+  border-bottom: 2px solid var(--border); padding-bottom: 10px; margin-bottom: 16px;
+}
+.stage-header h2 { color: var(--accent); }
+
+.party-preview {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 22px;
+}
+.party-preview .pcard {
+  background: var(--panel); border: 2px solid var(--border); border-radius: 8px; padding: 10px;
+}
+.pcard .pc-name { font-weight: bold; font-size: 15px; }
+.pcard .pc-meta { font-size: 12px; color: #b0b0d8; margin-top: 4px; }
+.pcard .pc-power { color: var(--accent); margin-left: 4px; }
+.pcard .pc-stats { font-size: 11px; color: #8a8ac0; margin-top: 6px; line-height: 1.5; }
+
+/* パーティ総合力バー */
+.party-power { font-size: 15px; color: #d8d8f4; margin-bottom: 10px; }
+.party-power b { color: var(--accent); font-size: 19px; }
+
+/* ステージ難易度ラベル */
+.stage-diff { font-size: 11px; margin-top: 5px; font-weight: bold; }
+.stage-diff.diff-easy   { color: #7fe0a0; }
+.stage-diff.diff-ok     { color: #8ad0ff; }
+.stage-diff.diff-hard   { color: #ffc14a; }
+.stage-diff.diff-danger { color: #ff6a5a; }
+
+/* 所持どうぐバー（ステージ選択画面） */
+.item-bar {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+  background: var(--panel); border: 2px solid var(--border); border-radius: 8px;
+  padding: 10px 12px; margin-bottom: 22px; min-height: 20px;
+}
+.item-bar .item-label { font-size: 13px; color: var(--accent); }
+.item-bar .item-empty { font-size: 13px; color: #7a7aa8; }
+.item-bar .item-chip {
+  font-size: 12px; color: #d8d8f4; background: var(--panel-light);
+  border: 1px solid var(--border); border-radius: 6px; padding: 3px 8px;
+}
+.item-bar .item-chip b { color: var(--accent); margin-left: 4px; font-weight: bold; }
+
+.cmd-empty { font-size: 13px; color: #8a8ac0; padding: 10px 4px; }
+
+/* 撃破ピップ */
+.stage-pips { font-size: 12px; letter-spacing: 2px; margin-top: 6px; color: #ffb14a; }
+.stage-pips.done { color: var(--hp-good); }
+
+.stage-grid {
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px;
+}
+.stage-cell {
+  background: var(--panel); border: 2px solid var(--border); border-radius: 10px;
+  padding: 14px 8px; text-align: center; cursor: pointer; position: relative;
+  transition: transform .08s, border-color .15s;
+}
+.stage-cell:hover:not(.locked) { border-color: var(--accent); transform: translateY(-2px); }
+.stage-cell.locked { opacity: .35; cursor: not-allowed; }
+.stage-cell.cleared { border-color: var(--hp-good); }
+.stage-cell .stage-num { font-size: 22px; font-weight: bold; color: var(--accent); }
+.stage-cell .stage-enemy { font-size: 12px; margin-top: 6px; color: #c8c8f0; }
+.stage-cell .stage-tag { font-size: 10px; margin-top: 6px; color: #9090c0; }
+.stage-cell .clear-mark { position: absolute; top: 4px; right: 6px; color: var(--hp-good); font-size: 14px; }
+.stage-cell.boss { border-color: #b3506a; }
+.stage-cell.boss:not(.locked) { box-shadow: 0 0 10px rgba(220,80,110,.3); }
+.stage-cell .boss-mark {
+  position: absolute; top: 4px; left: 6px; font-size: 10px; font-weight: bold;
+  color: #ff6a8a; letter-spacing: 1px;
+}
+
+/* ============ 戦闘画面 ============ */
+.battle-layout { display: grid; grid-template-columns: 1fr 260px; gap: 14px; min-width: 900px; }
+.battle-main { display: flex; flex-direction: column; gap: 12px; }
+
+.battle-top {
+  background: linear-gradient(180deg, #20204a 0%, #12122c 100%);
+  border: 2px solid var(--border); border-radius: 10px; padding: 14px;
+}
+.stage-info { font-size: 13px; color: var(--accent); margin-bottom: 10px; }
+.enemy-area { text-align: center; }
+.enemy-figure { font-size: 72px; line-height: 1; filter: drop-shadow(0 4px 6px rgba(0,0,0,.6)); }
+.enemy-figure.shake { animation: shake .3s; }
+@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-8px)} 75%{transform:translateX(8px)} }
+.enemy-figure.boss { font-size: 96px; animation: bossFloat 2.5s ease-in-out infinite; }
+@keyframes bossFloat { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-6px) scale(1.05)} }
+.enemy-name { font-size: 18px; font-weight: bold; margin: 8px 0 4px; }
+
+/* 敵の弱点・状態異常タグ */
+.enemy-tags { min-height: 22px; margin-bottom: 6px; display: flex; gap: 6px; justify-content: center; align-items: center; }
+.enemy-tags .tag-weak {
+  font-size: 12px; color: #ffcf6a; background: rgba(255,180,60,.12);
+  border: 1px solid #ad8a3a; border-radius: 10px; padding: 2px 8px;
+}
+.st-poison, .st-para { font-size: 14px; }
+.ally-status { font-size: 12px; }
+
+.hp-bar {
+  position: relative; height: 20px; background: #000; border: 1px solid var(--border);
+  border-radius: 10px; overflow: hidden;
+}
+.hp-bar.enemy-hp { width: 60%; margin: 0 auto; }
+.hp-bar-fill { height: 100%; background: var(--hp-good); transition: width .35s ease; }
+.hp-bar-text {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  font-size: 11px; text-shadow: 1px 1px 0 #000;
+}
+
+.battle-stage-fx {
+  min-height: 60px; display: flex; align-items: center; justify-content: center;
+  font-size: 34px; color: var(--accent); text-shadow: 2px 2px 0 #000;
+}
+.fx-pop { animation: fxpop .5s ease; }
+@keyframes fxpop { 0%{transform:scale(.4);opacity:0} 40%{transform:scale(1.3);opacity:1} 100%{transform:scale(1);opacity:1} }
+
+/* ダメージ/回復のポップアップ数字 */
+.dmg-pop {
+  position: fixed; z-index: 100; pointer-events: none;
+  transform: translate(-50%, -50%);
+  font-weight: 900; font-size: 26px; text-shadow: 2px 2px 0 #000, 0 0 6px rgba(0,0,0,.8);
+  animation: dmgPop .9s ease-out forwards;
+}
+.dmg-pop.pop-dmg { color: #ff7a4a; }
+.dmg-pop.pop-dmg.big { color: #ffd24a; font-size: 36px; }
+.dmg-pop.pop-heal { color: #5cf08a; font-size: 22px; }
+.dmg-pop.pop-poison { color: #c87aff; font-size: 22px; }
+@keyframes dmgPop {
+  0%   { opacity: 0; transform: translate(-50%, -30%) scale(.6); }
+  25%  { opacity: 1; transform: translate(-50%, -70%) scale(1.15); }
+  100% { opacity: 0; transform: translate(-50%, -160%) scale(1); }
+}
+
+.battle-bottom { display: grid; grid-template-columns: 1fr 320px; gap: 12px; }
+.message-window {
+  background: #000; border: 2px solid var(--border); border-radius: 10px;
+  padding: 14px; min-height: 150px; max-height: 150px; overflow-y: auto;
+  font-size: 14px; line-height: 1.7;
+}
+.message-window .msg-line { margin-bottom: 2px; }
+.message-window .msg-sys { color: var(--accent); }
+.message-window .msg-dmg { color: #ff8a6a; }
+.message-window .msg-heal { color: var(--hp-good); }
+
+.command-window {
+  background: #000; border: 2px solid var(--border); border-radius: 10px; padding: 12px;
+  min-height: 150px;
+}
+.command-window .cmd-title { font-size: 13px; color: var(--accent); margin-bottom: 8px; }
+.command-window .cmd-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.command-window .cmd-grid.one { grid-template-columns: 1fr; }
+.cmd-btn {
+  background: var(--panel-light); border: 2px solid var(--border); color: var(--text);
+  border-radius: 6px; padding: 9px; cursor: pointer; font-family: inherit; font-size: 13px;
+  text-align: left;
+}
+.cmd-btn:hover:not(:disabled) { border-color: var(--accent); background: #2a2a55; }
+.cmd-btn:disabled { opacity: .4; cursor: not-allowed; }
+.cmd-btn .cmd-mp { float: right; color: #8ab0ff; font-size: 11px; }
+
+/* ---------- 味方パネル ---------- */
+.party-panel { display: flex; flex-direction: column; gap: 10px; }
+.ally-card {
+  background: var(--panel); border: 2px solid var(--border); border-radius: 8px; padding: 10px;
+  transition: border-color .15s;
+}
+.ally-card.active { border-color: var(--accent); box-shadow: 0 0 10px rgba(255,210,74,.4); }
+.ally-card.dead { opacity: .45; }
+.ally-card.dead .ally-name::after { content: " 💀"; }
+.ally-top { display: flex; justify-content: space-between; align-items: baseline; }
+.ally-name { font-weight: bold; font-size: 14px; }
+.ally-rarity { color: var(--rarity); font-size: 12px; }
+.ally-lv { font-size: 11px; color: #b0b0d8; margin: 3px 0 5px; }
+.ally-hp-row { font-size: 11px; margin-bottom: 3px; display: flex; justify-content: space-between; }
+.ally-mp-row { font-size: 11px; color: #8ab0ff; }
+
+/* ============ ガチャ画面 ============ */
+#screen-gacha { display: none; }
+#screen-gacha.active { display: flex; justify-content: center; padding-top: 4vh; }
+.gacha-box { text-align: center; max-width: 760px; width: 100%; }
+.gacha-box h2 { color: var(--accent); margin-bottom: 18px; }
+.gacha-card .gc-power { font-size: 15px; color: var(--accent); margin: 4px 0 8px; }
+.gacha-card .gc-power b { font-size: 22px; }
+.gacha-section-title { font-size: 13px; color: #9090c8; margin: 4px 0 8px; }
+.gacha-card {
+  background: linear-gradient(180deg, #2a2a5a, #14142e);
+  border: 3px solid var(--rarity); border-radius: 14px; padding: 22px;
+  display: inline-block; min-width: 320px; margin-bottom: 20px;
+  box-shadow: 0 0 24px rgba(255,179,58,.35);
+  animation: fxpop .5s ease;
+}
+.gacha-card .gc-name { font-size: 26px; font-weight: bold; }
+.gacha-card .gc-rarity { color: var(--rarity); font-size: 18px; margin: 8px 0; }
+.gacha-card .gc-stats { font-size: 14px; color: #c8c8f0; line-height: 1.8; }
+.gacha-card .gc-skills { margin-top: 10px; font-size: 12px; color: #a8a8d8; }
+
+.gacha-actions { display: flex; gap: 12px; justify-content: center; margin-bottom: 18px; flex-wrap: wrap; align-items: center; }
+.gacha-party { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.gacha-party .swap-card {
+  background: var(--panel); border: 2px solid var(--border); border-radius: 8px; padding: 10px;
+  transition: border-color .15s, transform .1s; text-align: left;
+}
+.gacha-party.choosing .swap-card { cursor: pointer; }
+.gacha-party.choosing .swap-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.gacha-party .swap-card.better { border-color: var(--hp-good); }
+.gacha-party .swap-card .sc-name { font-weight: bold; font-size: 14px; }
+.gacha-party .swap-card .sc-meta { font-size: 11px; color: #b0b0d8; margin-top: 4px; line-height: 1.5; }
+.gacha-party .swap-card .sc-power { font-size: 12px; color: #c8c8f0; margin-top: 6px; }
+.gacha-party .swap-card .sc-up { color: var(--hp-good); font-weight: bold; margin-left: 4px; }
+.gacha-party .swap-card .sc-down { color: var(--hp-low); font-weight: bold; margin-left: 4px; }
+.gacha-party .swap-card .sc-eq { color: #9090c0; margin-left: 4px; }
+.gacha-party .swap-card .sc-action { margin-top: 8px; font-size: 11px; color: var(--accent); text-align: center; border-top: 1px solid var(--border); padding-top: 6px; }
+.gacha-hint { color: #ffd24a; font-size: 13px; margin: 0; }
+
+/* レア度カラー */
+.rar-1 { color: #c8c8c8; } .rar-2 { color: #9be89b; } .rar-3 { color: #8ad0ff; }
+.rar-4 { color: #6ab0ff; } .rar-5 { color: #b58aff; } .rar-6 { color: #d96aff; }
+.rar-7 { color: #ff8ad0; } .rar-8 { color: #ff8a6a; } .rar-9 { color: #ffb33a; }
+.rar-10 { color: #ffe14a; text-shadow: 0 0 8px rgba(255,225,74,.7); }
